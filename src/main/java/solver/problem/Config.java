@@ -7,7 +7,7 @@ public class Config {
     private DoubleProperty mass = new SimpleDoubleProperty(10);
     private DoubleProperty k = new SimpleDoubleProperty(0.9);
     private DoubleProperty angle = new SimpleDoubleProperty(25);
-    private DoubleProperty v0 = new SimpleDoubleProperty(45);
+    private DoubleProperty v0 = new SimpleDoubleProperty(45.0);
     private DoubleProperty precision = new SimpleDoubleProperty(0.001);
 
     public Config() {

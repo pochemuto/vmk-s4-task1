@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import solver.problem.Config;
 
 /**
  * @author pochemuto
@@ -27,6 +26,5 @@ public class FXApp extends Application {
         stage.setMinHeight(500);
         stage.show();
 
-        Config config = controller.getConfig();
     }
 }
