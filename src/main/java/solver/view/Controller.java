@@ -83,7 +83,9 @@ public class Controller implements Initializable {
 
 
                 chart.getData().add(getValue());
+                xAxis.setLowerBound(0);
                 xAxis.setUpperBound(maxBound);
+                yAxis.setLowerBound(0);
                 yAxis.setUpperBound(maxBound);
             }
         };

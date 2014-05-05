@@ -38,11 +38,10 @@ public class Problem {
         List<Double> x_values = new ArrayList<>(), y_values = new ArrayList<>();
 
         double t1 = t0, t2, x1 = 0, y1 = 0, x2, y2;
+        x_values.add(x1);
+        y_values.add(y1);
 
         do {
-            x_values.add(x1);
-            y_values.add(y1);
-
             t2 = t1 + precision;
             x2 = scheme.y2(x, t1, x1, t2);
             y2 = scheme.y2(y, t1, y1, t2);
@@ -50,6 +49,9 @@ public class Problem {
             t1 = t2;
             x1 = x2;
             y1 = y2;
+
+            x_values.add(x1);
+            y_values.add(y1);
 
         } while (y2 > 0);
 
