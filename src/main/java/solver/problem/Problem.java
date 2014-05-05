@@ -70,14 +70,14 @@ public class Problem {
         final double alpha = Math.toRadians(c.getAngle());
         final double t0 = 0;
         final double mu = k / m;
-        final double precision = c.getPrecision();
+        final double precision = c.getPrecision() * (2 * v0 * sin(alpha) / g);
 
         List<Double> x_values = new ArrayList<>(), y_values = new ArrayList<>();
-        double x, y, t = 0;
+        double x, y, t = t0;
 
         do {
             x = v0 * cos(alpha) / mu * (1 - exp(-mu * t));
-            y = (g / mu   + v0 * sin(alpha)) * (1 - exp(-mu * t)) / mu - g * t / mu;
+            y = (g / mu + v0 * sin(alpha)) * (1 - exp(-mu * t)) / mu - g * t / mu;
             t += precision; //TODO precision;
 
             x_values.add(x);
