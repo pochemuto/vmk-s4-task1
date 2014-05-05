@@ -11,11 +11,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.util.converter.NumberStringConverter;
 import solver.core.Scheme;
-import solver.methods.PredictorCorrector;
 import solver.problem.Config;
 import solver.problem.Problem;
 import solver.problem.Solution;
@@ -25,6 +27,9 @@ import solver.problem.Solution;
  */
 public class Controller implements Initializable {
     public LineChart<Number, Number> chart;
+    public NumberAxis xAxis;
+    public NumberAxis yAxis;
+    public ToggleGroup schemeGroup;
     @FXML
     private TextField speedField;
     @FXML
@@ -38,33 +43,48 @@ public class Controller implements Initializable {
 
     private Config config = new Config();
 
-    private final ExecutorService service = Executors.newFixedThreadPool(1);
+    private final ExecutorService service = Executors.newFixedThreadPool(1, r -> {
+        Thread thread = new Thread(r);
+        thread.setDaemon(true);
+        thread.setName("Solving Thread");
+        return thread;
+    });
 
-    public void reloadClick(ActionEvent event) {
-        System.out.println(config.getV0());
+    public void addClick(ActionEvent event) {
+        RadioButton toggle = (RadioButton) schemeGroup.getSelectedToggle();
+        final Scheme scheme = (Scheme) toggle.getUserData();
+        final String schemeName = toggle.getText();
 
         Task<XYChart.Series<Number, Number>> task = new Task<XYChart.Series<Number, Number>>() {
+            private double maxX;
+            private double maxY;
 
             @Override
             protected XYChart.Series<Number, Number> call() throws Exception {
-                Scheme scheme = new PredictorCorrector();
                 Solution solution = Problem.solve(scheme, config);
 
                 XYChart.Series<Number, Number> series = new XYChart.Series<>();
                 ObservableList<XYChart.Data<Number, Number>> data = series.getData();
                 for (int i = 0; i < solution.x.length; i++) {
                     double x = solution.x[i], y = solution.y[i];
+                    if (x>maxX) maxX = x;
+                    if (y>maxY) maxY = y;
 
                     data.add(new XYChart.Data<>(x,y));
                 }
+                series.setName(schemeName);
 
                 return series;
             }
 
             @Override
             protected void succeeded() {
-                chart.getData().clear();
+                double maxBound = Math.max(maxX, maxY);
+
+
                 chart.getData().add(getValue());
+                xAxis.setUpperBound(maxBound);
+                yAxis.setUpperBound(maxBound);
             }
         };
 
@@ -78,5 +98,9 @@ public class Controller implements Initializable {
         angleField.textProperty().bindBidirectional(config.angleProperty(), new NumberStringConverter());
         kField.textProperty().bindBidirectional(config.kProperty(), new NumberStringConverter());
         precisionField.textProperty().bindBidirectional(config.precisionProperty(), new NumberStringConverter());
+    }
+
+    public void clearClick(ActionEvent event) {
+        chart.getData().clear();
     }
 }
