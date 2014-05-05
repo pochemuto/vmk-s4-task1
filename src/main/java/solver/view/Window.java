@@ -1,8 +1,5 @@
 package solver.view;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -10,24 +7,21 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import solver.core.F;
 import solver.core.Scheme;
 import solver.methods.Euler;
 import solver.methods.PredictorCorrector;
 import solver.problem.Config;
+import solver.problem.Problem;
+import solver.problem.Solution;
 
 /**
  * @author pochemuto
  */
 public class Window extends JFrame {
-
-    private final static double g = 9.807;
 
     private final Plot plot = new Plot();
 
@@ -79,69 +73,34 @@ public class Window extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Scheme solver = new PredictorCorrector();
                 solver = new Euler();
-
                 configForm.getData(c);
 
-                final double v0 = c.getV0();
-                final double k = c.getK();
-                final double m = c.getMass();
-                final double alpha = Math.toRadians(c.getV0());
-                final double t0 = 0;
-                final double mu = k / m;
-                final double precision = c.getPrecision();
-
-                F fvx = (t, vx) -> -2 * mu * v0 * sin(alpha) / g * vx;
-                F fvy = (t, vy) -> -2 * mu * v0 * sin(alpha) / g * vy - 2 * sin(alpha);
-
-                final double vx0 = cos(alpha);
-                final double vy0 = sin(alpha);
-
-                Fnum x = new Fnum(solver, fvx, t0, vx0);
-                Fnum y = new Fnum(solver, fvy, t0, vy0);
-
-                List<Double> x_values = new ArrayList<>(), y_values = new ArrayList<>();
-
-                double t1 = t0, t2, x1 = 0, y1 = 0, x2, y2;
-
-                double maxx = 0, maxy = 0;
-                do {
-
-                    x_values.add(x1);
-                    y_values.add(y1);
-                    if (x1 > maxx) {
-                        maxx = x1;
-                    }
-                    if (y1 > maxy) {
-                        maxy = y1;
-                    }
-
-                    t2 = t1 + precision;
-                    x2 = solver.y2(x, t1, x1, t2);
-                    y2 = solver.y2(y, t1, y1, t2);
-
-                    t1 = t2;
-                    x1 = x2;
-                    y1 = y2;
-
-                    System.out.printf("t=%4s x=%4s y=%4s\n", t1 ,x1, y1);
-                } while (y2 > 0);
+                Solution solution = Problem.solve(solver, c);
 
                 Curve curve = new Curve();
-                curve.setData(
-                        x_values.stream().mapToDouble(Double::doubleValue).toArray(),
-                        y_values.stream().mapToDouble(Double::doubleValue).toArray());
+                curve.setData(solution.x, solution.y);
+
 
                 plot.getCurves().clear();
                 plot.addCurve(curve);
-                plot.setBounds(maxx, maxy);
+                plot.setBounds(max(solution.x), max(solution.y));
                 plot.repaint();
             }
         }));
         return stack;
     }
 
-    private static double sqr(double v) {
-        return v * v;
+    private double max(double[] data) {
+        if (data.length == 0) {
+            throw new IllegalArgumentException("empty data");
+        }
+        double max = data[0];
+        for (double v : data) {
+            if (v > max) {
+                max = v;
+            }
+        }
+        return max;
     }
 
     public void addCurve(Curve c) {
