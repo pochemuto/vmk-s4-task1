@@ -7,7 +7,6 @@ import solver.core.Scheme;
  * @author pochemuto
  */
 public class RungeKutta implements Scheme {
-
     public double y2(F f, double t1, double y1, double t2) {
         double h2 = t2 - t1, h = h2 / 2;
 
@@ -18,5 +17,4 @@ public class RungeKutta implements Scheme {
 
         return y1 + h2 / 6 * (k1 + 2 * k2 + 2 * k3 + k4);
     }
-
 }

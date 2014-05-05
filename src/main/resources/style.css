@@ -1,3 +1,4 @@
-*.chart-series-area-fill{
-    -fx-fill: #aab597;
+.chart-series-line {
+    -fx-stroke-width: 1px;
+    -fx-effect: null;
 }

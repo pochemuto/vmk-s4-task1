@@ -10,15 +10,15 @@
     <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
         <children>
             <LineChart fx:id="chart" animated="false" createSymbols="true" horizontalGridLinesVisible="true" legendVisible="true" prefHeight="481.0" prefWidth="752.0" AnchorPane.bottomAnchor="-9.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="8.0">
-                <stylesheets>
-                    <URL value="@style.css"/>
-                </stylesheets>
                 <xAxis>
                     <NumberAxis fx:id="xAxis" side="BOTTOM" autoRanging="false"/>
                 </xAxis>
                 <yAxis>
                     <NumberAxis fx:id="yAxis" side="LEFT" autoRanging="false"/>
                 </yAxis>
+                <stylesheets>
+                    <URL value="@style.css"/>
+                </stylesheets>
             </LineChart>
             <GridPane hgap="15.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-background-color: rgba(187, 187, 187, 0.70);&#10;-fx-background-radius: 4;&#10;" vgap="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <children>
@@ -73,6 +73,8 @@
                             </RadioButton>
                         </children>
                     </VBox>
+                    <CheckBox text="точки на графике" fx:id="points" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
                 </children>
                 <columnConstraints>
                     <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" prefWidth="-1.0"/>

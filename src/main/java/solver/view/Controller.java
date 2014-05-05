@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -30,6 +31,7 @@ public class Controller implements Initializable {
     public NumberAxis xAxis;
     public NumberAxis yAxis;
     public ToggleGroup schemeGroup;
+    public CheckBox points;
     @FXML
     private TextField speedField;
     @FXML
@@ -105,6 +107,7 @@ public class Controller implements Initializable {
         angleField.textProperty().bindBidirectional(config.angleProperty(), new NumberStringConverter());
         kField.textProperty().bindBidirectional(config.kProperty(), new NumberStringConverter());
         precisionField.textProperty().bindBidirectional(config.precisionProperty(), new NumberStringConverter());
+        chart.createSymbolsProperty().bind(points.selectedProperty());
     }
 
     public void clearClick(ActionEvent event) {
