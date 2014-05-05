@@ -61,7 +61,12 @@ public class Controller implements Initializable {
 
             @Override
             protected XYChart.Series<Number, Number> call() throws Exception {
-                Solution solution = Problem.solve(scheme, config);
+                Solution solution;
+                if (scheme != null) {
+                    solution = Problem.solve(scheme, config);
+                } else {
+                    solution = Problem.analytic(config);
+                }
 
                 XYChart.Series<Number, Number> series = new XYChart.Series<>();
                 ObservableList<XYChart.Data<Number, Number>> data = series.getData();

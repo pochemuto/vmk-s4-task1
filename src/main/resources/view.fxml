@@ -52,9 +52,6 @@
                 <toggleGroup>
                   <ToggleGroup fx:id="schemeGroup" />
                 </toggleGroup>
-                <userData>
-
-                </userData>
               </RadioButton>
               <RadioButton mnemonicParsing="false" text="предиктор-корректор" toggleGroup="$schemeGroup">
                   <userData>
